@@ -1,2 +1,3 @@
 include bikemonitor/schema.sql
 global-exclude *.pyc
+graft bike-website/templates

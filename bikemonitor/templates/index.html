@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BikeMonitor</title>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+    <script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js?v1.3.0"></script>
+    <script type="text/javascript">
+        function initialize() {
+            // Create the map
+            var map = new L.Map("terrain", {
+                center: new L.LatLng(53.5461, -113.4938),
+                zoom: 12
+            });
+            map.addLayer(new L.StamenTileLayer("terrain", {
+                detectRetina: true
+            }));
+
+            // show the scale bar on the lower left corner
+            L.control.scale({ imperial: true, metric: true }).addTo(map);
+
+            // show a marker on the map
+            L.marker({ lat: 53.526390, lon: -113.525480 }).bindPopup('UofA').addTo(map);
+
+        }
+    </script>
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body onload="initialize()">
+    <div id="terrain" class="map"></div>
+</body>
+
+</html>

@@ -27,12 +27,12 @@ def create_app(test_config=None):
     from bikemonitor import db
     db.init_app(app)
 
-    # a simple page that says hello
-    @app.route('/')
-    def hello():
-        return "Hello, World!"
-
     from bikemonitor import upload
     app.register_blueprint(upload.bp)
+
+    from . import map
+    app.register_blueprint(map.bp)
+    #app.add_url_rule('/', endpoint='index')
+
 
     return app

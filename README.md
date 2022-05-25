@@ -38,3 +38,12 @@ This repository contains the code to host the BikeMonitor web server. The web se
     pip install waitress
     waitress-server --call 'bikemonitor:create_app'
     ```
+
+
+## Attributions
+
+Server hosted using <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access Cloud</a>.
+
+Map embedded using <a href="https://leafletjs.com/">Leaflet</a> API.
+
+Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.
