@@ -1,0 +1,47 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+h1, h2 {
+    color: black;
+    text-align: center;
+}
+
+p {
+    padding: 10px;
+    font-size: 12px;
+}
+
+#map {
+    float: left;
+    width: 80%;
+    height: 100%;
+}
+
+#sidebar {
+    float: right;
+    height: 100%;
+    width: 20%;
+}
+
+#legend {
+    position: relative;
+    width: 100%;
+}
+
+#color-bar {
+    width: 80%;
+    height: 20px;
+    margin: 0 auto;
+    background-image: linear-gradient(to right, rgb(0, 255, 0), yellow, red);
+}
+
+.label {
+    position: absolute;
+    color: black;
+    text-align: center;
+    width: 50px;
+    margin-left: -25px;
+}

@@ -14,3 +14,4 @@ FROM (
 ) b, accelerometer a
 WHERE b.uid = a.user_id AND a.time_stamp <= b.ts2 and a.time_stamp >= b.ts1
 GROUP BY b.uid, b.ts2
+LIMIT 1000;
