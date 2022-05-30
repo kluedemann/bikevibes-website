@@ -1,8 +1,5 @@
-from curses import raw
-import functools
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
+    Blueprint, render_template
 )
 from bikemonitor.db import get_db
 from math import sqrt
@@ -12,7 +9,7 @@ bp = Blueprint('map', __name__)
 @bp.route("/")
 def index():
     db = get_db()
-    with current_app.open_resource('query.sql') as f:
+    with bp.open_resource('query.sql') as f:
         raw_data = db.execute(f.read().decode('utf8'))
     
     data = []

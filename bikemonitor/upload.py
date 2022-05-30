@@ -1,9 +1,6 @@
-import functools
-
 from flask import (
-    Blueprint, flash, g, jsonify, redirect, render_template, request, session, url_for
+    Blueprint, request, jsonify
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from bikemonitor.db import get_db
 
