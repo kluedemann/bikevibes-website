@@ -1,5 +1,4 @@
-include bikemonitor/schema.sql
-include bikemonitor/query.sql
 global-exclude *.pyc
 graft bikemonitor/templates
 graft bikemonitor/static
+graft bikemonitor/queries
