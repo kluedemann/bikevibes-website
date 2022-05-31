@@ -9,14 +9,15 @@ bp = Blueprint('map', __name__)
 @bp.route("/")
 def index():
     db = get_db()
-    with bp.open_resource('query.sql') as f:
+    with bp.open_resource('queries/avg_query.sql') as f:
         raw_data = db.execute(f.read().decode('utf8'))
     
     data = []
-    max = 20
+    with bp.open_resource('queries/max_query.sql') as f:
+        max_val = sqrt(db.execute(f.read().decode('utf8')).fetchone()[0])
     for row in raw_data:
-        average = min(sqrt(row[4]), max)
-        color = int(average * 510 // max)
+        average = min(sqrt(row[4]), max_val)
+        color = int(average * 510 // max_val)
         red = 255
         green = 255
         if (color > 255):
@@ -53,5 +54,5 @@ def index():
     #             # print(average, color, red, green)
     #             data.append({'points': [prev[3:5], current[3:5]], 'color': f'#{red:02X}{green:02X}00'})
 
-    return render_template("index.html", data=data, max=f"{max:.1f}", hm=f"{max/2:.1f}")
+    return render_template("index.html", data=data, max=f"{max_val:.1f}", hm=f"{max_val/2:.1f}")
 
