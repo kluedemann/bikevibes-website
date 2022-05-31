@@ -1,3 +1,4 @@
+from curses import raw
 from flask import (
     Blueprint, render_template
 )
@@ -14,7 +15,16 @@ def index():
     
     data = []
     with bp.open_resource('queries/max_query.sql') as f:
-        max_val = sqrt(db.execute(f.read().decode('utf8')).fetchone()[0])
+        max_val = db.execute(f.read().decode('utf8')).fetchone()[0]
+
+    if max_val is not None:
+        max_val = sqrt(max_val)
+        max_str = f"{max_val:.1f}"
+        max_hlf_str = f"{max_val/2:.1f}"
+    else:
+        max_str = "n/a"
+        max_hlf_str = "n/a"
+    
     for row in raw_data:
         average = min(sqrt(row[4]), max_val)
         color = int(average * 510 // max_val)
@@ -54,5 +64,5 @@ def index():
     #             # print(average, color, red, green)
     #             data.append({'points': [prev[3:5], current[3:5]], 'color': f'#{red:02X}{green:02X}00'})
 
-    return render_template("index.html", data=data, max=f"{max_val:.1f}", hm=f"{max_val/2:.1f}")
+    return render_template("index.html", data=data, max=max_str, hm=max_hlf_str)
 
