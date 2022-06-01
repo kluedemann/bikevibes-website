@@ -5,6 +5,7 @@ from bikemonitor.db import get_db
 
 
 def test_get_close_db(app):
+    # Test getting and closing the database connection
     with app.app_context():
         db = get_db()
         assert db is get_db()
@@ -16,6 +17,7 @@ def test_get_close_db(app):
 
 
 def test_init_db_command(runner, monkeypatch):
+    # Test initializing the database
     class Recorder(object):
         called = False
 

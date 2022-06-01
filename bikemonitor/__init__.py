@@ -32,7 +32,5 @@ def create_app(test_config=None):
 
     from . import map
     app.register_blueprint(map.bp)
-    #app.add_url_rule('/', endpoint='index')
-
 
     return app

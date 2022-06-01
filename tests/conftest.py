@@ -11,6 +11,7 @@ with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
 
 @pytest.fixture
 def app():
+    # Create an app instance for testing
     db_fd, db_path = tempfile.mkstemp()
 
     app = create_app({

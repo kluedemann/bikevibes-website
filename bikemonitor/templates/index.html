@@ -18,17 +18,14 @@
                 maxZoom: 15
             }).addTo(map);
 
+            // Add lines with data
             var data = {{ data|tojson }}
-
             for (line of data) {
                 L.polyline(line.points, { color: line.color}).addTo(map);
             }
 
             // show the scale bar on the lower left corner
             L.control.scale({ imperial: true, metric: true }).addTo(map);
-
-            // show a marker on the map
-            //L.marker({ lat: 53.526390, lon: -113.525480 }).bindPopup('UofA').addTo(map);
 
         }
     </script>

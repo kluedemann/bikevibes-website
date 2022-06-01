@@ -6,6 +6,7 @@ from flask.cli import with_appcontext
 
 
 def get_db():
+    # Return a database connection
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -17,6 +18,7 @@ def get_db():
 
 
 def close_db(e=None):
+    # Close the database connection
     db = g.pop('db', None)
 
     if db is not None:
@@ -24,11 +26,14 @@ def close_db(e=None):
 
 
 def init_db():
+    # Initialize a new database
     db = get_db()
 
+    # Create schema
     with current_app.open_resource('queries/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+    # Create segments view
     with current_app.open_resource('queries/segments.sql') as f:
         db.executescript(f.read().decode('utf8'))
 

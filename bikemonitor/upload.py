@@ -10,8 +10,8 @@ bp = Blueprint('upload', __name__, url_prefix='/upload')
 
 @bp.route("/location", methods=('POST',))
 def location():
+    # Upload location to database
     db = get_db()
-
     try:
         db.execute(
             "INSERT INTO locations (user_id, time_stamp, trip_id, latitude, longitude)"
@@ -29,8 +29,8 @@ def location():
 
 @bp.route("/accelerometer", methods=('POST',))
 def accelerometer():
+    # Upload accelerometer data to database
     db = get_db()
-
     try:
         db.execute(
             "INSERT INTO accelerometer (user_id, time_stamp, trip_id, x_accel, y_accel, z_accel)"
