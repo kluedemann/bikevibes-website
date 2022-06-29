@@ -13,8 +13,8 @@
         function initialize() {
             // Create the map
             var map = L.map('map').setView([53.5351, -113.4938], 12);
-            L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {
-                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+            L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey={{ api_key }}', {
+                attribution: 'Map tiles by <a href="https://www.thunderforest.com/">Thunderforest</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
                 maxZoom: 15
             }).addTo(map);
 
@@ -46,8 +46,8 @@
             <span class="label" style="left: 10%;">0</span>
             <span class="label" style="left: 50%;">{{ hm }}</span>
             <span class="label" style="left: 90%;">{{ max }}</span>
-            <p>The color of a line approximates the average magnitude of acceleration in m/s<sup>2</sup> over that segment. 
-                It weighs larger values more heavily to better differentiate the data.</p>
+            <p>The color of a line approximates the root mean square of vertical acceleration in m/s<sup>2</sup> over that segment. 
+                This metric weighs larger values more heavily to better differentiate the data.</p>
         </div>
         <h2>About</h2>
         <p>Mobile application and website developed by Kai Luedemann. Project supervised by Mario Nascimento. <br><br>

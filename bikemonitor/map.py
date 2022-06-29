@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template
+    Blueprint, current_app, render_template
 )
 from bikemonitor.db import get_db
 from math import sqrt
@@ -16,8 +16,9 @@ def index():
         raw_data = db.execute(f.read().decode('utf8'))
     
     # Get maximum value
-    with bp.open_resource('queries/max_query.sql') as f:
-        max_val = db.execute(f.read().decode('utf8')).fetchone()[0]
+    # with bp.open_resource('queries/max_query.sql') as f:
+    #     max_val = db.execute(f.read().decode('utf8')).fetchone()[0]
+    max_val = 25
 
     # Handle empty result set
     if max_val is not None:
@@ -43,4 +44,4 @@ def index():
         # print(average, color, red, green)
         data.append({'points': [row[0:2], row[2:4]], 'color': f'#{red:02X}{green:02X}00'})
 
-    return render_template("index.html", data=data, max=max_str, hm=max_hlf_str)
+    return render_template("index.html", data=data, max=max_str, hm=max_hlf_str, api_key=current_app.config['API_KEY'])
