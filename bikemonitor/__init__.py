@@ -33,4 +33,7 @@ def create_app(test_config=None):
     from . import map
     app.register_blueprint(map.bp)
 
+    from . import data
+    app.register_blueprint(data.bp)
+
     return app

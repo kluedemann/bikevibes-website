@@ -11,6 +11,9 @@ bp = Blueprint('map', __name__)
 @bp.route("/")
 def index():
     # Get raw data
+    return render_template("index.html", api_key=current_app.config['API_KEY'])
+
+def get_data():
     db = get_db()
     with bp.open_resource('queries/avg_query.sql') as f:
         raw_data = db.execute(f.read().decode('utf8'))
@@ -43,5 +46,4 @@ def index():
 
         # print(average, color, red, green)
         data.append({'points': [row[0:2], row[2:4]], 'color': f'#{red:02X}{green:02X}00'})
-
-    return render_template("index.html", data=data, max=max_str, hm=max_hlf_str, api_key=current_app.config['API_KEY'])
+    return data, max_val

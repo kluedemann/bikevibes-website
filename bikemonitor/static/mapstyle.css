@@ -11,7 +11,28 @@ h1, h2 {
 
 p {
     padding: 10px;
-    font-size: 12px;
+    font-size: small;
+}
+
+form {
+    margin-left: 20px;
+}
+
+label {
+    font-size: medium;
+}
+
+input.text-box {
+    height: 12px;
+    font-size: 90%;
+    float: right;
+    margin-right: 20px;
+    width: 60%;
+}
+
+input.button {
+    width: 45%;
+    margin-right: 10px;
 }
 
 #map {
@@ -24,6 +45,7 @@ p {
     float: right;
     height: 100%;
     width: 20%;
+    overflow-y: auto;
 }
 
 #legend {
