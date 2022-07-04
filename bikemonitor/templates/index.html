@@ -3,6 +3,7 @@
 
 <head>
     <title>BikeMonitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
         crossorigin="" />
@@ -27,10 +28,10 @@
             layerGroup = L.layerGroup();
             layerGroup.addTo(map);
 
-            $("#query").submit(function(event) {
+            $("#query").submit(function (event) {
                 event.preventDefault();
-                var form = $(this), url="/data";
-                $.getJSON(url, form.serialize(), function(data, status, xhr) {
+                var form = $(this), url = "/data";
+                $.getJSON(url, form.serialize(), function (data, status, xhr) {
                     drawLines(data);
                 });
             })
@@ -42,7 +43,7 @@
 
         function getData() {
             // Add lines with data
-            $.getJSON("/data", function(data, status, xhr) {
+            $.getJSON("/data", function (data, status, xhr) {
                 drawLines(data);
             });
         }
@@ -50,7 +51,7 @@
         function drawLines(data) {
             clearLayers();
             for (line of data) {
-                L.polyline(line.points, { color: line.color}).addTo(layerGroup);
+                L.polyline(line.points, { color: line.color }).addTo(layerGroup);
             }
         }
 
@@ -58,7 +59,7 @@
             layerGroup.clearLayers();
         }
 
-        
+
     </script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mapstyle.css') }}">
 </head>
@@ -67,46 +68,70 @@
     <div id="map"></div>
     <div id="sidebar">
         <h1>BikeMonitor</h1>
-        <h2>Description</h2>
-        <p>The BikeMonitor app is designed to crowdsource data on the quality of bicycle paths and roads. 
-            It tracks accelerometer and location data on your phone and uploads it to a web server. 
-            This website allows you to query and visualize this data. </p>
+        <div id="description">
+            <h2>Description</h2>
+            <p>The BikeMonitor app is designed to crowdsource data on the quality of bicycle paths and roads.
+                It tracks accelerometer and location data on your phone and uploads it to a web server.
+                This website allows you to query and visualize this data. </p>
+        </div>
         <div id="legend">
             <h2>Legend</h2>
-            <div id="color-bar"></div>
-            <span class="label" style="left: 10%;">0</span>
-            <span class="label" style="left: 50%;">2.5</span>
-            <span class="label" style="left: 90%;">5.0</span>
-            <p>The color of a line represents the root mean square of vertical acceleration in m/s<sup>2</sup> over that segment. 
+            <div id="bar-container">
+                <div id="color-bar"></div>
+                <span class="label" style="left: 10%;">0</span>
+                <span class="label" style="left: 50%;">2.5</span>
+                <span class="label" style="left: 90%;">5.0</span>
+            </div>
+            <p>The color of a line represents the root mean square of vertical acceleration in m/s<sup>2</sup> over that
+                segment.
                 This metric weighs larger values more heavily to better differentiate the data.</p>
         </div>
-        <h2>Filters</h2>
-        <form id="query">
-            <label for="user_id">User ID:</label>
-            <input class="text-box" type="text" id="user_id" name="user_id"><br>
-            <label for="start_date">Start Date:</label>
-            <input class="text-box" type="date" id="start_date" name="start_date"><br>
-            <label for="end_date">End Date:</label>
-            <input class="text-box" type="date" id="end_date" name="end_date"><br>
-            <label for="start_time">Start Time:</label>
-            <input class="text-box" type="time" id="start_time" name="start_time"><br>
-            <label for="end_time">End Time:</label>
-            <input class="text-box" type="time" id="end_time" name="end_time"><br>
-            <input class="button" type="submit" value="Submit">
-            <input class="button" type="reset">
-        </form>
-        <h2>About</h2>
-        <p>Mobile application and website developed by Kai Luedemann. Project supervised by Mario Nascimento.
-            Inquiries can be emailed to <a href="mailto:kluedema@ualberta.ca">kluedema@ualberta.ca</a>. 
-            <br> <br>
-            Server hosting provided by <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access Cloud</a>.
-            <br><br>
-            Funding provided by <a href="https://www.nserc-crsng.gc.ca/index_eng.asp">Natural Sciences and Engineering Research Council of Canada</a>.
-            <br><br>
-            Map tiles provided by <a href="https://www.thunderforest.com/">Thunderforest</a>.
-            Map data provided by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors under ODbL.
-            Interactive map by <a href="https://leafletjs.com/">Leaflet</a>.
-        </p>
+        <div id="filters">
+            <h2>Filters</h2>
+            <form id="query">
+                <div class="form-row">
+                    <label for="user_id">User ID:</label>
+                    <input class="text-box" type="text" id="user_id" name="user_id">
+                </div>
+                <div class="form-row">
+                    <label for="start_date">Start Date:</label>
+                    <input class="text-box" type="date" id="start_date" name="start_date">
+                </div>
+                <div class="form-row">
+                    <label for="end_date">End Date:</label>
+                    <input class="text-box" type="date" id="end_date" name="end_date">
+                </div>
+                <div class="form-row">
+                    <label for="start_time">Start Time:</label>
+                    <input class="text-box" type="time" id="start_time" name="start_time">
+                </div>
+                <div class="form-row">
+                    <label for="end_time">End Time:</label>
+                    <input class="text-box" type="time" id="end_time" name="end_time">
+                </div>
+                <div id="buttons-row">
+                    <input type="submit" value="Apply" id="apply" class="form-buttons">
+                    <input type="reset" value="Clear" id="clear" class="form-buttons">
+                </div>
+            </form>
+        </div>
+        <div id="about">
+            <h2>About</h2>
+            <p>Mobile application and website developed by Kai Luedemann. Project supervised by Mario Nascimento.
+                Inquiries can be emailed to <a href="mailto:kluedema@ualberta.ca">kluedema@ualberta.ca</a>.
+                <br> <br>
+                Server hosting provided by <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access
+                    Cloud</a>.
+                <br><br>
+                Funding provided by <a href="https://www.nserc-crsng.gc.ca/index_eng.asp">Natural Sciences and
+                    Engineering Research Council of Canada</a>.
+                <br><br>
+                Map tiles provided by <a href="https://www.thunderforest.com/">Thunderforest</a>.
+                Map data provided by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+                under ODbL.
+                Interactive map by <a href="https://leafletjs.com/">Leaflet</a>.
+            </p>
+        </div>
     </div>
 </body>
 
