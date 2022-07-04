@@ -14,7 +14,7 @@ def data():
     return jsonify(data)
 
 def get_data(args):
-    print([i for i in args.items()])
+    # print([i for i in args.items()])
 
     query_str = make_query_str(args)
     db = get_db()
@@ -63,5 +63,5 @@ def make_query_str(args):
         query += " AND TIME(g.ts1 / 1000, 'unixepoch', 'localtime') >= TIME(:start_time)"
     if end_time:
         query += " AND TIME(g.ts2 / 1000, 'unixepoch', 'localtime') <= TIME(:end_time)"
-    print(query)
+    # print(query)
     return query

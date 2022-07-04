@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 
 html, body {
@@ -14,13 +15,7 @@ h1, h2 {
 }
 
 p {
-    margin: 10px;
-    font-size: small;
-}
-
-form {
-    margin-left: 20px;
-    margin-right: 20px;
+    font-size: medium;
 }
 
 label {
@@ -70,6 +65,8 @@ input.text-box {
     height: 35%;
     width: 100%;
     overflow-y: auto;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 #legend {
