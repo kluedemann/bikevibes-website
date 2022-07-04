@@ -146,12 +146,12 @@ def make_query_str(args):
     if args.get("user_id", ''):
         query += " AND g.uid = :user_id"
     if args.get("start_date", ''):
-        query += " AND DATE(g.ts1 / 1000, 'unixepoch') >= :start_date"
+        query += " AND DATE(g.ts1 / 1000, 'unixepoch', '-6 hours') >= :start_date"
     if args.get("end_date", ''):
-        query += " AND DATE(g.ts2 / 1000, 'unixepoch') <= :end_date"
+        query += " AND DATE(g.ts2 / 1000, 'unixepoch', '-6 hours') <= :end_date"
     if args.get("start_time", ''):
-        query += " AND TIME(g.ts1 / 1000, 'unixepoch', 'localtime') >= TIME(:start_time)"
+        query += " AND TIME(g.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
     if args.get("end_time", ''):
-        query += " AND TIME(g.ts2 / 1000, 'unixepoch', 'localtime') <= TIME(:end_time)"
+        query += " AND TIME(g.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
     
     return query
