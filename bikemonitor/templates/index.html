@@ -28,24 +28,20 @@
             layerGroup = L.layerGroup();
             layerGroup.addTo(map);
 
+            document.getElementById("width-input").value = window.innerWidth;
+            document.getElementById("height-input").value = window.innerHeight;
+
             $("#query").submit(function (event) {
                 event.preventDefault();
-                var form = $(this), url = "/data";
-                $.getJSON(url, form.serialize(), function (data, status, xhr) {
-                    drawLines(data.lines);
-                    updateText(data.max, data.half);
-                    map.setView(data.center, data.zoom);
-                });
+                getData();
             })
-
-            //document.forms["query"].submit();
 
             getData();
         }
 
         function getData() {
             // Add lines with data
-            $.getJSON("/data", function (data, status, xhr) {
+            $.getJSON("/data", $("#query").serialize(), function(data, status, xhr) {
                 drawLines(data.lines);
                 updateText(data.max, data.half);
                 map.setView(data.center, data.zoom);
@@ -122,6 +118,8 @@
                     <input type="submit" value="Apply" id="apply" class="form-buttons">
                     <input type="reset" value="Clear" id="clear" class="form-buttons">
                 </div>
+                <input type="hidden" id="width-input" name="width">
+                <input type="hidden" id="height-input" name="height">
             </form>
         </div>
         <div id="about">

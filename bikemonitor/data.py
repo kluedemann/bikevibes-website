@@ -26,7 +26,9 @@ def data():
     # Query the values
     lines, max_val = get_data(request.args)
     max_str, max_hlf_str = get_strings(max_val)
-    center, zoom = get_map(lines)
+    width = int(request.args.get("width", 400))
+    height = int(request.args.get("height", 800))
+    center, zoom = get_map(lines, width, height)
 
     data = {
         "lines": lines,
@@ -39,7 +41,7 @@ def data():
     return jsonify(data)
 
 
-def get_map(lines):
+def get_map(lines, width, height):
     """
     Determine the new center and zoom level for the map
 
@@ -61,12 +63,18 @@ def get_map(lines):
     min_lon = min(line['points'][0][1] for line in lines)
     max_lon = max(line['points'][0][1] for line in lines)
 
+    # Account for map being part of the screen
+    if width >= 768:
+        width = width * 4 // 5
+    else:
+        height = height * 65 // 100
+
     # Calculate the center and zoom level
     center = [(min_lat + max_lat) / 2, (min_lon + max_lon) / 2]
-    zoom_lat = min(int(-log((max_lat - min_lat) / 180, 2) + 1.5), 20)
-    zoom_lon = min(int(-log((max_lon - min_lon) / 360, 2) + 1.5), 20)
+    zoom_lat = min(int(-log((max_lat - min_lat) * 256 / (180 * height), 2)), 20)
+    zoom_lon = min(int(-log((max_lon - min_lon) * 256 / (360 * width), 2)), 20)
     zoom = min(zoom_lat, zoom_lon)
-
+    
     return center, zoom
 
 
@@ -142,6 +150,9 @@ def make_query_str(args):
     GROUP BY s.uid, s.ts2
     ) b, segments g
     WHERE g.uid = b.uid AND g.ts2 = b.ts2"""
+
+    LIMIT_AMOUNT = 5000
+    is_mobile = int(args.get("width", 0)) < 768
     
     if args.get("user_id", ''):
         query += " AND g.uid = :user_id"
@@ -153,5 +164,6 @@ def make_query_str(args):
         query += " AND TIME(g.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
     if args.get("end_time", ''):
         query += " AND TIME(g.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
-    
+    if is_mobile:
+        query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
     return query
