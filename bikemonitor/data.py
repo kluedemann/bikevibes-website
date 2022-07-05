@@ -74,7 +74,7 @@ def get_map(lines, width, height):
     zoom_lat = min(int(-log((max_lat - min_lat) * 256 / (180 * height), 2)), 20)
     zoom_lon = min(int(-log((max_lon - min_lon) * 256 / (360 * width), 2)), 20)
     zoom = min(zoom_lat, zoom_lon)
-    
+
     return center, zoom
 
 
@@ -151,8 +151,10 @@ def make_query_str(args):
     ) b, segments g
     WHERE g.uid = b.uid AND g.ts2 = b.ts2"""
 
-    LIMIT_AMOUNT = 5000
-    is_mobile = int(args.get("width", 0)) < 768
+    LIMIT_AMOUNT = 20000
+    is_mobile = (int(args.get("width", 0)) < 1300) and (int(args.get("height", 0)) < 1300)
+    if is_mobile:
+        LIMIT_AMOUNT = 2000
     
     if args.get("user_id", ''):
         query += " AND g.uid = :user_id"
@@ -164,6 +166,5 @@ def make_query_str(args):
         query += " AND TIME(g.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
     if args.get("end_time", ''):
         query += " AND TIME(g.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
-    if is_mobile:
-        query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
+    query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
     return query

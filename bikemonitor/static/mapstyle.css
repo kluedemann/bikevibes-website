@@ -89,7 +89,14 @@ input.text-box {
     margin-left: -25px;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (max-height: 500px) {
+    #sidebar {
+        overflow-y: visible;
+    }
+}
+
+
+@media only screen and (min-width: 1000px) {
     #map {
         float: left;
         width: 80%;
