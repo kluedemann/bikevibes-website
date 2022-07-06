@@ -43,7 +43,12 @@ def data():
 
 def get_map(lines, width, height):
     """
-    Determine the new center and zoom level for the map
+    Determine the new center and zoom level for the map.
+
+    Parameters:
+        lines - (list) the list of polylines stored in dicts as a list of points and a color string
+        width - (int) the width of the viewport in pixels
+        height - (int) the height of the viewport in pixels
 
     Returns:
         center - (list) the lat-long coordinates of the new center point
@@ -82,6 +87,9 @@ def get_strings(max_val):
     """
     Construct the maximum and halfway strings for the color bar
 
+    Parameters:
+        max_val - (float) the maximum value returned by the query
+
     Returns:
         max_str - (str) the value to be displayed at the end of the color bar
         max_hlf_str - (str) the value to the displayed at the midpoint of the color bar
@@ -98,7 +106,11 @@ def get_strings(max_val):
 
 
 def get_data(args):
-    """Query the data from the database and construct it into lines.
+    """
+    Query the data from the database and construct it into lines.
+
+    Parameters:
+        args - (ImmutibleMultiDict) the parameters received in the HTTP request
     
     Returns:
         data - (list) used to construct the polylines for the map
@@ -138,6 +150,17 @@ def get_data(args):
 
 
 def get_user(db, alias):
+    """
+    Return the user id to search for in the database given an alias.
+    If the user id is not found, return the alias.
+
+    Parameters:
+        db - (Cursor) the sqlite cursor for the database
+        alias - (str) the alias passed in with the HTTP request
+
+    Returns: the user ID to search for in the table; '' if none
+    """
+
     if alias:
         user_row = db.execute("SELECT user_id FROM aliases WHERE alias=?", (alias,)).fetchone()
         if user_row is None:
@@ -148,8 +171,12 @@ def get_user(db, alias):
 
 
 def make_query_str(args):
-    """Construct the query string from the form arguments delivered.
+    """
+    Construct the query string from the form arguments delivered.
     
+    Parameters:
+        args - (dict) the parameters in the HTTP request to filter with
+
     Returns:
         query - (str) the query string to retrieve the segments
             - has additional constraints depending on the parameters given
@@ -164,11 +191,13 @@ def make_query_str(args):
     ) b, segments g
     WHERE g.uid = b.uid AND g.ts2 = b.ts2"""
 
+    # Determine row limit
     LIMIT_AMOUNT = 20000
     is_mobile = (int(args.get("width", 0)) < 1300) and (int(args.get("height", 0)) < 1300)
     if is_mobile:
         LIMIT_AMOUNT = 2000
     
+    # Add query filters
     if args.get("user_id", ''):
         query += " AND g.uid = :user_id"
     if args.get("start_date", ''):
@@ -179,5 +208,7 @@ def make_query_str(args):
         query += " AND TIME(g.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
     if args.get("end_time", ''):
         query += " AND TIME(g.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
+
+    # Add row limit
     query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
     return query

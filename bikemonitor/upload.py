@@ -50,7 +50,9 @@ def accelerometer():
 def alias():
     db = get_db()
     try:
-        db.execute("INSERT OR REPLACE INTO aliases (user_id, alias) VALUES (:user_id, :alias)", request.values)
+        db.execute("INSERT INTO aliases (user_id, alias) VALUES (:user_id, :alias)"
+        " ON CONFLICT(user_id) DO UPDATE SET"
+        " alias=excluded.alias WHERE user_id=excluded.user_id", request.values)
         db.commit()
     except db.IntegrityError:
         resp = jsonify(success=False)

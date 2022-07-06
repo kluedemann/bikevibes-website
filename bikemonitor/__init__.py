@@ -4,6 +4,13 @@ from flask import Flask
 
 
 def create_app(test_config=None):
+    """
+    The Application factory function.
+    Sets the configuration and registers blueprints.
+    
+    Returns: app - a Flask application object
+    """
+
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -24,16 +31,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from bikemonitor import db
+    # Register blueprints
+    from bikemonitor import db, upload, map, data
     db.init_app(app)
-
-    from bikemonitor import upload
     app.register_blueprint(upload.bp)
-
-    from . import map
     app.register_blueprint(map.bp)
-
-    from . import data
     app.register_blueprint(data.bp)
 
     return app
