@@ -44,3 +44,17 @@ def accelerometer():
         return resp
     else:
         return jsonify(success=True) 
+
+
+@bp.route("/alias", methods=('POST',))
+def alias():
+    db = get_db()
+    try:
+        db.execute("INSERT OR REPLACE INTO aliases (user_id, alias) VALUES (:user_id, :alias)", request.values)
+        db.commit()
+    except db.IntegrityError:
+        resp = jsonify(success=False)
+        resp.status_code = 500
+        return resp
+    else:
+        return jsonify(success=True)

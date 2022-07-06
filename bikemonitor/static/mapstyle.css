@@ -89,6 +89,36 @@ input.text-box {
     margin-left: -25px;
 }
 
+.nav-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    color: black;
+    font-size: large;
+    font-weight: bold;
+    text-decoration: none;
+    border-color: black;
+    display: inline-block;
+    width: 48%;
+    text-align: center;
+    border-width: 2px;
+    border-style: solid;
+    background-color: rgb(205, 243, 255);
+}
+
+#request-button {
+    float: right;
+}
+
+.nav-button:hover {
+    background-color: aquamarine;
+}
+
+#nav-bar {
+    width: 100%;
+}
+
 @media only screen and (max-height: 500px) {
     #sidebar {
         overflow-y: visible;
@@ -107,5 +137,14 @@ input.text-box {
         height: 100%;
         width: 20%;
         overflow-y: auto;
+    }
+
+    .nav-button {
+        display: block;
+        width: 100%;
+    }
+
+    #request-button {
+        float: none;
     }
 }

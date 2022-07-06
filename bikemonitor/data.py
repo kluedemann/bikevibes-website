@@ -107,8 +107,12 @@ def get_data(args):
     """
 
     # Query data from database
-    query_str = make_query_str(args)
     db = get_db()
+    alias = args.get("user_id", '')
+    user_id = get_user(db, alias)
+    query_str = make_query_str(args)
+    args = dict(args)
+    args["user_id"] = user_id
     raw_data = db.execute(query_str, args).fetchall()
 
     # Determine maximum value
@@ -132,6 +136,15 @@ def get_data(args):
         data.append({'points': [row[0:2], row[2:4]], 'color': f'#{red:02X}{green:02X}00'})
     return data, max_val
 
+
+def get_user(db, alias):
+    if alias:
+        user_row = db.execute("SELECT user_id FROM aliases WHERE alias=?", (alias,)).fetchone()
+        if user_row is None:
+            return alias
+        else:
+            return user_row[0]
+    return alias
 
 
 def make_query_str(args):

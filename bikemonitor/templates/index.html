@@ -73,29 +73,15 @@
     <div id="map"></div>
     <div id="sidebar">
         <h1>BikeVibes</h1>
-        <div id="description">
-            <h2>Description</h2>
-            <p>The BikeMonitor app is designed to crowdsource data on the quality of bicycle paths and roads.
-                It tracks accelerometer and location data on your phone and uploads it to a web server.
-                This website allows you to query and visualize this data. </p>
-        </div>
-        <div id="legend">
-            <h2>Legend</h2>
-            <div id="bar-container">
-                <div id="color-bar"></div>
-                <span class="label" style="left: 10%;">0</span>
-                <span id="half-label" class="label" style="left: 50%;">n/a</span>
-                <span id="max-label" class="label" style="left: 90%;">n/a</span>
-            </div>
-            <p>The color of a line represents the root mean square of vertical acceleration in m/s<sup>2</sup> over that
-                segment.
-                This metric weighs larger values more heavily to better differentiate the data.</p>
+        <div id="nav-bar">
+            <a class="nav-button" href="https://www.bikevibes.ca">About</a>
+            <a class="nav-button" href="https://forms.gle/EpxfVKBe8BqUsJFo8" id="request-button">Request Data</a>
         </div>
         <div id="filters">
             <h2>Filters</h2>
             <form id="query">
                 <div class="form-row">
-                    <label for="user_id">User ID:</label>
+                    <label for="user_id">Alias/ID:</label>
                     <input class="text-box" type="text" id="user_id" name="user_id">
                 </div>
                 <div class="form-row">
@@ -122,11 +108,24 @@
                 <input type="hidden" id="height-input" name="height">
             </form>
         </div>
+        <div id="legend">
+            <h2>Legend</h2>
+            <div id="bar-container">
+                <div id="color-bar"></div>
+                <span class="label" style="left: 10%;">0</span>
+                <span id="half-label" class="label" style="left: 50%;">n/a</span>
+                <span id="max-label" class="label" style="left: 90%;">n/a</span>
+            </div>
+            <p>The color of a line represents the root mean square of vertical acceleration in m/s<sup>2</sup> over that
+                segment.
+                This metric weighs larger values more heavily to better differentiate the data.</p>
+        </div>
+        
+        
+        
         <div id="about">
-            <h2>About</h2>
-            <p>Mobile application and website developed by Kai Luedemann. Project supervised by Mario Nascimento.
-                Inquiries can be emailed to <a href="mailto:kluedema@ualberta.ca">kluedema@ualberta.ca</a>.
-                <br> <br>
+            <h2>Acknowledgements</h2>
+            <p>
                 Server hosting provided by <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access
                     Cloud</a>.
                 <br><br>
