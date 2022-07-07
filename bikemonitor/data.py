@@ -13,6 +13,15 @@ def data():
     """
     Return json data with information used to update the map
 
+    Query Parameters:
+        alias (str) - the alias to search for
+        start_date (str) - the start date in YYYY-MM-DD format
+        end_date (str) - the end date in YYYY-MM-DD format
+        start_time (str) - the start time in HH:mm format
+        end_time (str) - the end time in HH:mm format
+        width (int) - the viewport width in pixels
+        height (int) - the viewport height in pixels
+
     Returns:
         data - (dict) contains labelled information for the client
             lines - (list) the information needed to construct the polylines
@@ -24,10 +33,10 @@ def data():
     """
 
     # Query the values
-    lines, max_val = get_data(request.args)
+    lines, max_val = get_data(request.values)
     max_str, max_hlf_str = get_strings(max_val)
-    width = int(request.args.get("width", 400))
-    height = int(request.args.get("height", 800))
+    width = int(request.values.get("width", 400))
+    height = int(request.values.get("height", 800))
     center, zoom = get_map(lines, width, height)
 
     data = {
@@ -120,11 +129,7 @@ def get_data(args):
 
     # Query data from database
     db = get_db()
-    alias = args.get("user_id", '')
-    user_id = get_user(db, alias)
     query_str = make_query_str(args)
-    args = dict(args)
-    args["user_id"] = user_id
     raw_data = db.execute(query_str, args).fetchall()
 
     # Determine maximum value
@@ -149,27 +154,6 @@ def get_data(args):
     return data, max_val
 
 
-def get_user(db, alias):
-    """
-    Return the user id to search for in the database given an alias.
-    If the user id is not found, return the alias.
-
-    Parameters:
-        db - (Cursor) the sqlite cursor for the database
-        alias - (str) the alias passed in with the HTTP request
-
-    Returns: the user ID to search for in the table; '' if none
-    """
-
-    if alias:
-        user_row = db.execute("SELECT user_id FROM aliases WHERE alias=?", (alias,)).fetchone()
-        if user_row is None:
-            return alias
-        else:
-            return user_row[0]
-    return alias
-
-
 def make_query_str(args):
     """
     Construct the query string from the form arguments delivered.
@@ -182,14 +166,16 @@ def make_query_str(args):
             - has additional constraints depending on the parameters given
     """
 
-    query = """SELECT g.lat1, g.lon1, g.lat2, g.lon2, b.avg_accel
+    query = """
+    SELECT g.lat1, g.lon1, g.lat2, g.lon2, b.avg_accel
     FROM (
     SELECT s.uid as uid, s.ts2 as ts2, AVG(z_accel * z_accel) as avg_accel
     FROM segments s, accelerometer a
     WHERE s.uid = a.user_id AND a.time_stamp <= s.ts2 and a.time_stamp >= s.ts1
     GROUP BY s.uid, s.ts2
     ) b, segments g
-    WHERE g.uid = b.uid AND g.ts2 = b.ts2"""
+    """
+    where_clause = " WHERE g.uid = b.uid AND g.ts2 = b.ts2"
 
     # Determine row limit
     LIMIT_AMOUNT = 20000
@@ -198,8 +184,10 @@ def make_query_str(args):
         LIMIT_AMOUNT = 2000
     
     # Add query filters
-    if args.get("user_id", ''):
-        query += " AND g.uid = :user_id"
+    if args.get("alias", ''):
+        query += ", users u" + where_clause + " AND u.alias = :alias AND g.uid = u.user_id"
+    else:
+        query += where_clause
     if args.get("start_date", ''):
         query += " AND DATE(g.ts1 / 1000, 'unixepoch', '-6 hours') >= :start_date"
     if args.get("end_date", ''):
@@ -211,4 +199,5 @@ def make_query_str(args):
 
     # Add row limit
     query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
+
     return query

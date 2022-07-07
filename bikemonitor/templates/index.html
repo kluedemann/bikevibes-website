@@ -28,9 +28,6 @@
             layerGroup = L.layerGroup();
             layerGroup.addTo(map);
 
-            document.getElementById("width-input").value = window.innerWidth;
-            document.getElementById("height-input").value = window.innerHeight;
-
             $("#query").submit(function (event) {
                 event.preventDefault();
                 getData();
@@ -41,6 +38,8 @@
 
         function getData() {
             // Add lines with data
+            document.getElementById("width-input").value = window.innerWidth;
+            document.getElementById("height-input").value = window.innerHeight;
             $.getJSON("/data", $("#query").serialize(), function(data, status, xhr) {
                 drawLines(data.lines);
                 updateText(data.max, data.half);
@@ -81,8 +80,8 @@
             <h2>Filters</h2>
             <form id="query">
                 <div class="form-row">
-                    <label for="user_id">Alias/ID:</label>
-                    <input class="text-box" type="text" id="user_id" name="user_id">
+                    <label for="alias">Alias:</label>
+                    <input class="text-box" type="text" id="alias" name="alias">
                 </div>
                 <div class="form-row">
                     <label for="start_date">Start Date:</label>
