@@ -1,3 +1,8 @@
+INSERT INTO users (user_id, alias) VALUES
+    ('test', 'apple'),
+    ('test2', 'banana'),
+    ('a', NULL);
+
 INSERT INTO locations (user_id, time_stamp, trip_id, latitude, longitude)
 VALUES
     ('test', 0, 0, 53.52639, -113.52548),
@@ -19,3 +24,5 @@ VALUES
     ('test', 3, 1, -50.0, -50.0, -50.0),
     ('test2', 0, 0, 0.0, 0.0, 0.0),
     ('test', 5, 2, 100.0, 0.0, 0.0);
+
+
