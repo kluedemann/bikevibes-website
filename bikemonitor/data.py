@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, current_app, jsonify, request
+    Blueprint, jsonify, request
 )
 from bikemonitor.db import get_db
 from math import log, sqrt
@@ -72,10 +72,12 @@ def get_map(lines, width, height):
         return [53.5351, -113.4938], 12
     
     # Get the minimum and maximum coordinates
-    min_lat = min(line['points'][0][0] for line in lines)
-    max_lat = max(line['points'][0][0] for line in lines)
-    min_lon = min(line['points'][0][1] for line in lines)
-    max_lon = max(line['points'][0][1] for line in lines)
+    first_lat = lines[0]['points'][0][0]
+    first_lon = lines[0]['points'][0][1]
+    min_lat = min(min(line['points'][1][0] for line in lines), first_lat)
+    max_lat = max(max(line['points'][1][0] for line in lines), first_lat)
+    min_lon = min(min(line['points'][1][1] for line in lines), first_lon)
+    max_lon = max(max(line['points'][1][1] for line in lines), first_lon)
 
     # Account for map being part of the screen
     if width >= 768:
@@ -85,10 +87,18 @@ def get_map(lines, width, height):
 
     # Calculate the center and zoom level
     center = [(min_lat + max_lat) / 2, (min_lon + max_lon) / 2]
-    zoom_lat = min(int(-log((max_lat - min_lat) * 256 / (180 * height), 2)), 20)
-    zoom_lon = min(int(-log((max_lon - min_lon) * 256 / (360 * width), 2)), 20)
-    zoom = min(zoom_lat, zoom_lon)
 
+    if max_lat != min_lat and height != 0: 
+        zoom_lat = min(int(-log((max_lat - min_lat) * 256 / (180 * height), 2)), 20)
+    else:
+        zoom_lat = 20
+
+    if max_lon != min_lon and width != 0:
+        zoom_lon = min(int(-log((max_lon - min_lon) * 256 / (360 * width), 2)), 20)
+    else:
+        zoom_lon = 20
+
+    zoom = min(zoom_lat, zoom_lon)
     return center, zoom
 
 
@@ -199,5 +209,4 @@ def make_query_str(args):
 
     # Add row limit
     query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
-
     return query
