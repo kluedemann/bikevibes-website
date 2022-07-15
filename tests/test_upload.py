@@ -71,7 +71,7 @@ def test_alias(client, app):
 
     # Upload an empty alias
     response = client.post(
-        '/upload/alias', data={'user_id': 'c'}
+        '/upload/alias?user_id=new'
     )
     assert response.status_code == 200
     assert response.json["success"]
@@ -85,9 +85,11 @@ def test_alias(client, app):
 
     # Check accelerometer data exists
     with app.app_context():
-        assert get_db().execute(
-            "SELECT COUNT(*) FROM users",
-        ).fetchone()[0] == 5
+        data = get_db().execute(
+            "SELECT * FROM users",
+        ).fetchall()
+        assert len(data) == 5
+
 
     # Upload a conflicting alias
     response = client.post(

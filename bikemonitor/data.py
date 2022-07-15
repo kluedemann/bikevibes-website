@@ -143,9 +143,9 @@ def get_data(args):
     raw_data = db.execute(query_str, args).fetchall()
 
     # Determine maximum value
-    max_val = 0
-    if raw_data:
-        max_val = sqrt(max(row[4] for row in raw_data))
+    max_val = 3
+    # if raw_data:
+    #     max_val = sqrt(max(row[4] for row in raw_data))
 
     data = []
     for row in raw_data:
@@ -188,7 +188,7 @@ def make_query_str(args):
     where_clause = " WHERE g.uid = b.uid AND g.ts2 = b.ts2"
 
     # Determine row limit
-    LIMIT_AMOUNT = 20000
+    LIMIT_AMOUNT = 10000
     is_mobile = (int(args.get("width", 0)) < 1300) and (int(args.get("height", 0)) < 1300)
     if is_mobile:
         LIMIT_AMOUNT = 2000

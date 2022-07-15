@@ -7,9 +7,9 @@ def test_data(client):
     # Ensure correct data is returned
     response = client.get('/data')
     data = response.json
-    assert data['center'] == [53.525, -113.48774]
-    assert data['half'] == '25.0'
-    assert data['max'] == '50.0'
+    assert data['center'] == [53.535, -113.485]
+    assert data['half'] == '1.5'
+    assert data['max'] == '3.0'
     assert data['zoom'] == 12
 
     # Ensure line is calculated correctly
@@ -23,8 +23,8 @@ def test_data(client):
     data = response.json
     assert data['center'] == [53.5351, -113.4938]
     assert data['zoom'] == 12
-    assert data['max'] == "n/a"
-    assert data['half'] == "n/a"
+    assert data['max'] == "3.0"
+    assert data['half'] == "1.5"
     assert data['lines'] == []
 
     # Test desktop size
