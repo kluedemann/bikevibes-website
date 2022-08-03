@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
         crossorigin="" />
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <link href="{{ url_for('static', filename='logo.png') }}" rel="icon">
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
         integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
         crossorigin=""></script>
@@ -40,7 +42,7 @@
             // Add lines with data
             document.getElementById("width-input").value = window.innerWidth;
             document.getElementById("height-input").value = window.innerHeight;
-            $.getJSON("/data", $("#query").serialize(), function(data, status, xhr) {
+            $.getJSON("/data", $("#query").serialize(), function (data, status, xhr) {
                 drawLines(data.lines);
                 //updateText(data.max, data.half);
                 map.setView(data.center, data.zoom);
@@ -59,8 +61,8 @@
         }
 
         function updateText(max, half) {
-            document.getElementById("half-label").textContent=half;
-            document.getElementById("max-label").textContent=max;
+            document.getElementById("half-label").textContent = half;
+            document.getElementById("max-label").textContent = max;
         }
 
 
@@ -71,71 +73,80 @@
 <body onload="initialize()">
     <div id="map"></div>
     <div id="sidebar">
-        <h1>BikeVibes</h1>
-        <div id="nav-bar">
-            <a class="nav-button" href="https://www.bikevibes.ca">About</a>
-            <a class="nav-button" href="https://forms.gle/EpxfVKBe8BqUsJFo8" id="request-button">Request Data</a>
-        </div>
-        <div id="filters">
-            <h2>Filters</h2>
-            <form id="query">
-                <div class="form-row">
-                    <label for="alias">Alias:</label>
-                    <input class="text-box" type="text" id="alias" name="alias">
-                </div>
-                <div class="form-row">
-                    <label for="start_date">Start Date:</label>
-                    <input class="text-box" type="date" id="start_date" name="start_date">
-                </div>
-                <div class="form-row">
-                    <label for="end_date">End Date:</label>
-                    <input class="text-box" type="date" id="end_date" name="end_date">
-                </div>
-                <div class="form-row">
-                    <label for="start_time">Start Time:</label>
-                    <input class="text-box" type="time" id="start_time" name="start_time">
-                </div>
-                <div class="form-row">
-                    <label for="end_time">End Time:</label>
-                    <input class="text-box" type="time" id="end_time" name="end_time">
-                </div>
-                <div id="buttons-row">
-                    <input type="submit" value="Apply" id="apply" class="form-buttons">
-                    <input type="reset" value="Clear" id="clear" class="form-buttons">
-                </div>
-                <input type="hidden" id="width-input" name="width">
-                <input type="hidden" id="height-input" name="height">
-            </form>
-        </div>
-        <div id="legend">
-            <h2>Legend</h2>
-            <div id="bar-container">
-                <div id="color-bar"></div>
-                <span class="label" style="left: 10%;">Smooth</span>
-                <span id="half-label" class="label" style="left: 50%;">Medium</span>
-                <span id="max-label" class="label" style="left: 90%;">Rough</span>
+        <div id="header">
+            <div id="title">
+                <img id="logo" src="{{url_for('static', filename='logo.png') }}" alt="Logo">
+                <h1 id="title-text">BikeVibes</h1>
             </div>
-            <p>The color of a line is based on the root mean square of vertical acceleration  over that
-                segment.
-                This metric weighs larger values more heavily to better differentiate the data.</p>
+
+            <div id="nav-bar">
+                <a class="nav-button" href="https://www.bikevibes.ca">About</a>
+                <a class="nav-button" href="https://forms.gle/EpxfVKBe8BqUsJFo8" id="request-button">Request Data</a>
+            </div>
         </div>
-        
-        
-        
-        <div id="about">
-            <h2>Acknowledgements</h2>
-            <p>
-                Server hosting provided by <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access
-                    Cloud</a>.
-                <br><br>
-                Funding provided by <a href="https://www.nserc-crsng.gc.ca/index_eng.asp">Natural Sciences and
-                    Engineering Research Council of Canada</a>.
-                <br><br>
-                Map tiles provided by <a href="https://www.thunderforest.com/">Thunderforest</a>.
-                Map data provided by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
-                under ODbL.
-                Interactive map by <a href="https://leafletjs.com/">Leaflet</a>.
-            </p>
+        <div id="content">
+            <div id="filters">
+                <h2>Filters</h2>
+                <form id="query">
+                    <div class="form-row">
+                        <label for="alias">Alias:</label>
+                        <input class="text-box" type="text" id="alias" name="alias">
+                    </div>
+                    <div class="form-row">
+                        <label for="start_date">Start Date:</label>
+                        <input class="text-box" type="date" id="start_date" name="start_date">
+                    </div>
+                    <div class="form-row">
+                        <label for="end_date">End Date:</label>
+                        <input class="text-box" type="date" id="end_date" name="end_date">
+                    </div>
+                    <div class="form-row">
+                        <label for="start_time">Start Time:</label>
+                        <input class="text-box" type="time" id="start_time" name="start_time">
+                    </div>
+                    <div class="form-row">
+                        <label for="end_time">End Time:</label>
+                        <input class="text-box" type="time" id="end_time" name="end_time">
+                    </div>
+                    <div id="buttons-row">
+                        <input type="submit" value="Apply" id="apply" class="form-buttons">
+                        <input type="reset" value="Clear" id="clear" class="form-buttons">
+                    </div>
+                    <input type="hidden" id="width-input" name="width">
+                    <input type="hidden" id="height-input" name="height">
+                </form>
+            </div>
+            <div id="legend">
+                <h2>Legend</h2>
+                <div id="bar-container">
+                    <div id="color-bar"></div>
+                    <span class="label" style="left: 10%;">Smooth</span>
+                    <span id="half-label" class="label" style="left: 50%;">Medium</span>
+                    <span id="max-label" class="label" style="left: 90%;">Rough</span>
+                </div>
+                <p>The color of a line is based on the root mean square of vertical acceleration over that
+                    segment.
+                    This metric weighs larger values more heavily to better differentiate the data.</p>
+            </div>
+
+
+
+            <div id="about">
+                <h2>Acknowledgements</h2>
+                <p>
+                    Server hosting provided by <a href="https://www.cybera.ca/rapid-access-cloud/">Cybera Rapid Access
+                        Cloud</a>.
+                    <br><br>
+                    Funding provided by <a href="https://www.nserc-crsng.gc.ca/index_eng.asp">Natural Sciences and
+                        Engineering Research Council of Canada</a>.
+                    <br><br>
+                    Map tiles provided by <a href="https://www.thunderforest.com/">Thunderforest</a>.
+                    Map data provided by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+                    contributors
+                    under ODbL.
+                    Interactive map by <a href="https://leafletjs.com/">Leaflet</a>.
+                </p>
+            </div>
         </div>
     </div>
 </body>
