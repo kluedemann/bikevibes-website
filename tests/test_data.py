@@ -8,13 +8,13 @@ def test_data(client):
     response = client.get('/data')
     data = response.json
     assert data['center'] == [53.535, -113.485]
-    assert data['half'] == '1.5'
-    assert data['max'] == '3.0'
+    assert data['half'] == '1.8'
+    assert data['max'] == '3.5'
     assert data['zoom'] == 12
 
     # Ensure line is calculated correctly
     lines = data['lines']
-    assert len(lines) == 4
+    assert len(lines) == 5
     assert lines[0]['color'] == '#FF0000'
     assert lines[0]['points'] == [[53.5, -113.45], [53.52, -113.48]]
 
@@ -23,8 +23,8 @@ def test_data(client):
     data = response.json
     assert data['center'] == [53.5351, -113.4938]
     assert data['zoom'] == 12
-    assert data['max'] == "3.0"
-    assert data['half'] == "1.5"
+    assert data['max'] == "3.5"
+    assert data['half'] == "1.8"
     assert data['lines'] == []
 
     # Test desktop size
@@ -33,3 +33,7 @@ def test_data(client):
     # Test query parameters
     response = client.get('/data?alias=apple&start_date=0000-01-01&end_date=2023-01-01&start_time=00:00&end_time=23:59')
     assert len(response.json['lines']) > 0
+
+    response = client.get('/data?alias=point')
+    data = response.json
+    assert data['zoom'] == 20

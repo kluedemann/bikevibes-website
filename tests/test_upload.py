@@ -88,7 +88,7 @@ def test_alias(client, app):
         data = get_db().execute(
             "SELECT * FROM users",
         ).fetchall()
-        assert len(data) == 5
+        assert len(data) == 6
 
 
     # Upload a conflicting alias

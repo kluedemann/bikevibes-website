@@ -114,12 +114,8 @@ def get_strings(max_val):
         max_hlf_str - (str) the value to the displayed at the midpoint of the color bar
     """
 
-    if max_val != 0:
-        max_str = f"{max_val:.1f}"
-        max_hlf_str = f"{max_val/2:.1f}"
-    else:
-        max_hlf_str="n/a"
-        max_str="n/a"
+    max_str = f"{max_val:.1f}"
+    max_hlf_str = f"{max_val/2:.1f}"
 
     return max_str, max_hlf_str
 
@@ -143,7 +139,7 @@ def get_data(args):
     raw_data = db.execute(query_str, args).fetchall()
 
     # Determine maximum value
-    max_val = 3
+    max_val = 3.5
     # if raw_data:
     #     max_val = sqrt(max(row[4] for row in raw_data))
 

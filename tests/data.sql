@@ -1,7 +1,8 @@
 INSERT INTO users (user_id, alias) VALUES
     ('test', 'apple'),
     ('test2', 'banana'),
-    ('a', NULL);
+    ('a', NULL),
+    ('test3', 'point');
 
 INSERT INTO locations (user_id, time_stamp, trip_id, latitude, longitude)
 VALUES
@@ -14,7 +15,9 @@ VALUES
     ('test2', 1, 0, 53.57, -113.52),
     ('test', 5, 2, 53.48, -113.55),
     ('test', 6, 3, 53.46, -113.57),
-    ('test', 7, 3, 53.6, -113.52);
+    ('test', 7, 3, 53.6, -113.52),
+    ('test3', 0, 0, 53.535, -113.485),
+    ('test3', 1, 0, 53.535, -113.485);
 
 INSERT INTO accelerometer (user_id, time_stamp, trip_id, x_accel, y_accel, z_accel)
 VALUES 
@@ -23,6 +26,5 @@ VALUES
     ('test', 2, 0, 17.0, 0.0, 0.0),
     ('test', 3, 1, -50.0, -50.0, -50.0),
     ('test2', 0, 0, 0.0, 0.0, 0.0),
-    ('test', 5, 2, 100.0, 0.0, 0.0);
-
-
+    ('test', 5, 2, 100.0, 0.0, 0.0),
+    ('test3', 0, 0, 0.0, 0.0, 0.0);

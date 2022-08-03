@@ -42,7 +42,7 @@
             document.getElementById("height-input").value = window.innerHeight;
             $.getJSON("/data", $("#query").serialize(), function(data, status, xhr) {
                 drawLines(data.lines);
-                updateText(data.max, data.half);
+                //updateText(data.max, data.half);
                 map.setView(data.center, data.zoom);
             });
         }
@@ -111,11 +111,11 @@
             <h2>Legend</h2>
             <div id="bar-container">
                 <div id="color-bar"></div>
-                <span class="label" style="left: 10%;">0</span>
-                <span id="half-label" class="label" style="left: 50%;">n/a</span>
-                <span id="max-label" class="label" style="left: 90%;">n/a</span>
+                <span class="label" style="left: 10%;">Smooth</span>
+                <span id="half-label" class="label" style="left: 50%;">Medium</span>
+                <span id="max-label" class="label" style="left: 90%;">Rough</span>
             </div>
-            <p>The color of a line represents the root mean square of vertical acceleration in m/s<sup>2</sup> over that
+            <p>The color of a line is based on the root mean square of vertical acceleration  over that
                 segment.
                 This metric weighs larger values more heavily to better differentiate the data.</p>
         </div>
