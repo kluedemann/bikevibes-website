@@ -32,10 +32,11 @@ def create_app(test_config=None):
         pass
 
     # Register blueprints
-    from bikemonitor import db, upload, map, data
+    from bikemonitor import db, upload, map, data, delete
     db.init_app(app)
     app.register_blueprint(upload.bp)
     app.register_blueprint(map.bp)
     app.register_blueprint(data.bp)
+    app.register_blueprint(delete.bp)
 
     return app
