@@ -13,6 +13,7 @@ def delete(user_id):
     db = get_db()
     db.execute("DELETE FROM accelerometer WHERE user_id=?", (user_id,))
     db.execute("DELETE FROM locations WHERE user_id=?", (user_id,))
+    db.execute("DELETE FROM surfaces WHERE user_id=?", (user_id,))
     db.execute("DELETE FROM users WHERE user_id=?", (user_id,))
     db.commit()
     return jsonify(success=True)

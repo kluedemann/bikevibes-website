@@ -74,6 +74,25 @@ def alias():
     return insert_query(query, args)
 
 
+@bp.route("/surface", methods=('POST',))
+def surface():
+    """Upload a trip surface into the database.
+    
+    Query Parameters:
+        user_id (str) - the user who the trip belongs to
+        trip_id (int) - the trip whose surface is classified
+        surface (str) - the primary surface over which the trip took place
+
+    Returns: a JSON response indicating success
+    """
+
+    query = """
+    INSERT INTO surfaces (user_id, trip_id, surface)
+     VALUES (:user_id, :trip_id, :surface)
+    """
+    return insert_query(query, request.values)
+
+
 def insert_query(query, args):
     """Execute an insertion query on the database.
     Returns a response indicating success with an appropriate status code.

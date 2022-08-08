@@ -17,7 +17,13 @@ def test_delete(client, app):
         assert len(data) == 6
         assert 'test3' not in data
 
+        data = get_db().execute("SELECT user_id FROM surfaces").fetchall()
+        assert len(data) == 5
+        assert 'test3' not in data
+
         data = get_db().execute("SELECT user_id FROM users").fetchall()
         assert len(data) == 3
         assert 'test3' not in data
+
+        
         

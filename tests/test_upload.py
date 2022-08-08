@@ -102,3 +102,38 @@ def test_alias(client, app):
     response = client.post('/upload/alias')
     assert response.status_code == 400
     assert not response.json["success"]
+
+def test_surface(client, app):
+    """Test uploading a surface to the database."""
+
+    # Upload a surface record
+    response = client.post(
+        '/upload/surface', data={'user_id': 'a', 'trip_id': 2, 'surface': 'Dirt'}
+    )
+    assert response.status_code == 200
+    assert response.json["success"]
+
+    # Upload for another trip
+    response = client.post(
+        '/upload/surface', data={'user_id': 'a', 'trip_id': 3, 'surface': ''}
+    )
+    assert response.status_code == 200
+    assert response.json["success"]
+
+    # Check surface data exists
+    with app.app_context():
+        assert get_db().execute(
+            "SELECT * FROM surfaces WHERE user_id = 'a'",
+        ).fetchone() is not None
+
+    # Upload conflicting surface
+    response = client.post(
+        '/upload/surface', data={'user_id': 'a', 'trip_id': 2, 'surface': 'Gravel'}
+    )
+    assert response.status_code == 409
+    assert not response.json["success"]
+
+    # Upload empty data
+    response = client.post('/upload/surface')
+    assert response.status_code == 400
+    assert not response.json["success"]

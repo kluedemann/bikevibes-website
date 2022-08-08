@@ -28,3 +28,12 @@ VALUES
     ('test2', 0, 0, 0.0, 0.0, 0.0),
     ('test', 5, 2, 100.0, 0.0, 0.0),
     ('test3', 0, 0, 0.0, 0.0, 0.0);
+
+INSERT INTO surfaces (user_id, trip_id, surface)
+VALUES
+    ('test', 0, 'Pavement'),
+    ('test', 1, 'Gravel'),
+    ('test', 2, 'Dirt'),
+    ('test', 3, 'Pavement'),
+    ('test2', 0, 'Pavement'),
+    ('test3', 0, 'Pavement');

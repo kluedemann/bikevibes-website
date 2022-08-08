@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS accelerometer;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS surfaces;
 
 CREATE TABLE locations (
     user_id TEXT NOT NULL,
@@ -27,4 +28,12 @@ CREATE TABLE users (
     user_id TEXT NOT NULL,
     alias TEXT UNIQUE,
     PRIMARY KEY (user_id)
+);
+
+CREATE TABLE surfaces (
+    user_id TEXT NOT NULL,
+    trip_id INTEGER NOT NULL,
+    surface TEXT,
+    PRIMARY KEY (user_id, trip_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
