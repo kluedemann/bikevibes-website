@@ -139,7 +139,13 @@ def get_data(args):
     raw_data = db.execute(query_str, args).fetchall()
 
     # Determine maximum value
-    max_val = 3.5
+    values = {
+        'Pavement': 2.0,
+        'Dirt': 3.5,
+        'Gravel': 5.0,
+        'Any': 3.5
+    }
+    max_val = values.get(args.get('surface', 'Any'), 3.5)
     # if raw_data:
     #     max_val = sqrt(max(row[4] for row in raw_data))
 
@@ -173,36 +179,36 @@ def make_query_str(args):
     """
 
     query = """
-    SELECT g.lat1, g.lon1, g.lat2, g.lon2, b.avg_accel
-    FROM (
-    SELECT s.uid as uid, s.ts2 as ts2, AVG(z_accel * z_accel) as avg_accel
-    FROM segments s, accelerometer a
-    WHERE s.uid = a.user_id AND a.time_stamp <= s.ts2 and a.time_stamp >= s.ts1
-    GROUP BY s.uid, s.ts2
-    ) b, segments g
+    SELECT s.lat1, s.lon1, s.lat2, s.lon2, AVG(a.z_accel * a.z_accel)
+    FROM segments s, accelerometer a, users u, surfaces r
+    WHERE s.uid = a.user_id AND a.time_stamp <= s.ts2 AND a.time_stamp >= s.ts1
+    AND s.uid = u.user_id AND s.uid = r.user_id AND s.tid = r.trip_id
     """
-    where_clause = " WHERE g.uid = b.uid AND g.ts2 = b.ts2"
-
+    
     # Determine row limit
     LIMIT_AMOUNT = 10000
     is_mobile = (int(args.get("width", 0)) < 1300) and (int(args.get("height", 0)) < 1300)
     if is_mobile:
         LIMIT_AMOUNT = 2000
+
+    query_end = f"""
+    GROUP BY s.uid, s.ts2
+    ORDER BY s.ts1 DESC
+    LIMIT {LIMIT_AMOUNT};
+    """
     
     # Add query filters
     if args.get("alias", ''):
-        query += ", users u" + where_clause + " AND u.alias = :alias AND g.uid = u.user_id"
-    else:
-        query += where_clause
+        query += " AND u.alias = :alias"
+    if args.get("surface", 'Any') != 'Any':
+        query += " AND r.surface = :surface"
     if args.get("start_date", ''):
-        query += " AND DATE(g.ts1 / 1000, 'unixepoch', '-6 hours') >= :start_date"
+        query += " AND DATE(s.ts1 / 1000, 'unixepoch', '-6 hours') >= :start_date"
     if args.get("end_date", ''):
-        query += " AND DATE(g.ts2 / 1000, 'unixepoch', '-6 hours') <= :end_date"
+        query += " AND DATE(s.ts2 / 1000, 'unixepoch', '-6 hours') <= :end_date"
     if args.get("start_time", ''):
-        query += " AND TIME(g.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
+        query += " AND TIME(s.ts1 / 1000, 'unixepoch', '-6 hours') >= TIME(:start_time)"
     if args.get("end_time", ''):
-        query += " AND TIME(g.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
-
-    # Add row limit
-    query += f" ORDER BY g.ts1 DESC LIMIT {LIMIT_AMOUNT}"
-    return query
+        query += " AND TIME(s.ts2 / 1000, 'unixepoch', '-6 hours') <= TIME(:end_time)"
+    
+    return query + query_end

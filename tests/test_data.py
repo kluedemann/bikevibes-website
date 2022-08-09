@@ -31,7 +31,7 @@ def test_data(client):
     response = client.get('/data?width=2000&height=2000')
 
     # Test query parameters
-    response = client.get('/data?alias=apple&start_date=0000-01-01&end_date=2023-01-01&start_time=00:00&end_time=23:59')
+    response = client.get('/data?alias=apple&start_date=0000-01-01&end_date=2023-01-01&start_time=00:00&end_time=23:59&surface=Pavement')
     assert len(response.json['lines']) > 0
 
     response = client.get('/data?alias=point')
