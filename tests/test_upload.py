@@ -115,7 +115,7 @@ def test_surface(client, app):
 
     # Upload for another trip
     response = client.post(
-        '/upload/surface', data={'user_id': 'a', 'trip_id': 3, 'surface': ''}
+        '/upload/surface', data={'user_id': 'a', 'trip_id': 3}
     )
     assert response.status_code == 200
     assert response.json["success"]

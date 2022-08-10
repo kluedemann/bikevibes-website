@@ -169,13 +169,13 @@ input.text-box {
 @media only screen and (min-width: 1000px) {
     #map {
         float: left;
-        width: 80%;
+        width: calc(100% - 400px);
         height: 100%;
     }
     #sidebar {
         float: right;
         height: 100%;
-        width: 20%;
+        width: 400px;
         overflow-y: auto;
     }
 

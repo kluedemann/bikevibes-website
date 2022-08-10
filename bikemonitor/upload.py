@@ -90,7 +90,10 @@ def surface():
     INSERT INTO surfaces (user_id, trip_id, surface)
      VALUES (:user_id, :trip_id, :surface)
     """
-    return insert_query(query, request.values)
+    args = dict(request.values)
+    if 'surface' not in args:
+        args['surface'] = None
+    return insert_query(query, args)
 
 
 def insert_query(query, args):
