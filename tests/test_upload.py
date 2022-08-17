@@ -137,3 +137,30 @@ def test_surface(client, app):
     response = client.post('/upload/surface')
     assert response.status_code == 400
     assert not response.json["success"]
+
+
+def test_upload(client, app):
+    response = client.post('/upload', json={
+        'user_id': 'c',
+        'accelerometer': [],
+        'locations': [],
+        'surfaces': [{'surface': 'Dirt', 'trip_id': 0}, {'surface': 'Pavement', 'trip_id': 0}, {'surface': 'Gravel', 'trip_id': 1}]
+        })
+    assert response.status_code == 200
+    assert response.json["success"]
+
+    with app.app_context():
+        data = get_db().execute(
+            "SELECT * FROM surfaces WHERE user_id = 'c'",
+        ).fetchall()
+        assert len(data) == 2
+        assert data[0][2] == 'Dirt'
+
+    response = client.post('/upload', data={
+        'user_id': 'c',
+        'accelerometer': [],
+        'locations': [],
+        'surfaces': []
+        })
+    assert response.status_code == 400
+    assert not response.json["success"]

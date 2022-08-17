@@ -1,11 +1,52 @@
 from flask import (
-    Blueprint, request, jsonify
+    Blueprint, request, jsonify, copy_current_request_context, current_app
 )
-
+from threading import Thread
 from bikemonitor.db import get_db
 
 
 bp = Blueprint('upload', __name__, url_prefix='/upload')
+
+
+@bp.route("", methods=('POST',))
+def upload():
+    if request.is_json:
+        data = request.json
+        insert_data(data)
+        return jsonify(success=True), 200
+    else:
+        return jsonify(success=False), 400
+
+
+def insert_data(data):
+    db = get_db()
+    user_id = data["user_id"]
+    db.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
+    
+    queries = {
+        'accelerometer': """
+            INSERT OR IGNORE INTO accelerometer (user_id, time_stamp, trip_id, x_accel, y_accel, z_accel)
+            VALUES (:user_id, :time_stamp, :trip_id, :x_accel, :y_accel, :z_accel)
+        """,
+        'locations': """
+            INSERT OR IGNORE INTO locations (user_id, time_stamp, trip_id, latitude, longitude)
+            VALUES (:user_id, :time_stamp, :trip_id, :latitude, :longitude)
+        """,
+        'surfaces': """
+            INSERT OR IGNORE INTO surfaces (user_id, trip_id, surface)
+            VALUES (:user_id, :trip_id, :surface)
+        """
+    }
+    for datatype in queries:
+        insert_records(user_id, data[datatype], queries[datatype])
+    db.commit()
+
+
+def insert_records(user_id, data, query):
+    for record in data:
+        record["user_id"] = user_id
+    db = get_db()
+    db.executemany(query, data)
 
 
 @bp.route("/location", methods=('POST',))
