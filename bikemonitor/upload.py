@@ -10,20 +10,47 @@ bp = Blueprint('upload', __name__, url_prefix='/upload')
 
 @bp.route("", methods=('POST',))
 def upload():
+    """Upload the data received from the app in JSON form.
+    
+    POST data:
+        request.json (dict) - the JSON object sent by the post request
+            user_id (str) - the user_id
+            accelerometer (list) - the accelerometer records
+            locations (list) - the location records
+            surfaces (list) - the trip surfaces
+
+    Returns:
+        (str) - the JSON data for the response; indicates success or failure
+        (int) - the HTTP status code; 200 for success or 400 for bad request
+    """
+
     if request.is_json:
         data = request.json
-        insert_data(data)
-        return jsonify(success=True), 200
+        return insert_data(data)
     else:
         return jsonify(success=False), 400
 
 
 def insert_data(data):
-    db = get_db()
-    user_id = data["user_id"]
-    db.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
+    """Insert the uploaded data into the database.
     
+    Parameters:
+        data (dict) - the JSON object sent by the post request
+            user_id (str) - the user_id
+            accelerometer (list) - the accelerometer records
+            locations (list) - the location records
+            surfaces (list) - the trip surfaces
+
+    Returns:
+        (str) - the JSON data for the response; indicates success or failure
+        (int) - the HTTP status code; 200 for success or 400 for bad request
+    """
+
     queries = {
+        'surfaces': """
+            INSERT OR IGNORE INTO surfaces (user_id, trip_id, surface)
+            VALUES (:user_id, :trip_id, :surface)
+        """,
         'accelerometer': """
             INSERT OR IGNORE INTO accelerometer (user_id, time_stamp, trip_id, x_accel, y_accel, z_accel)
             VALUES (:user_id, :time_stamp, :trip_id, :x_accel, :y_accel, :z_accel)
@@ -31,23 +58,54 @@ def insert_data(data):
         'locations': """
             INSERT OR IGNORE INTO locations (user_id, time_stamp, trip_id, latitude, longitude)
             VALUES (:user_id, :time_stamp, :trip_id, :latitude, :longitude)
-        """,
-        'surfaces': """
-            INSERT OR IGNORE INTO surfaces (user_id, trip_id, surface)
-            VALUES (:user_id, :trip_id, :surface)
-        """
+        """       
     }
-    for datatype in queries:
-        insert_records(user_id, data[datatype], queries[datatype])
+    
+    # Ensure there is a user_id
+    user_id = data.get("user_id", None)
+    if user_id is None:
+        return jsonify(success=False), 400
+
+    # Insert the user if needed
+    db = get_db()
+    db.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
+    
+    response = (jsonify(success=True), 200)
+
+    # Insert data
+    for table in queries:
+        try:
+            insert_records(user_id, data.get(table, []), queries[table])
+        except db.ProgrammingError:
+            # Return 400 if any bad records, still try all queries
+            response = (jsonify(success=False), 400)
+    
     db.commit()
+    return response
 
 
 def insert_records(user_id, data, query):
+    """Insert records into their respective tables.
+
+    Parameters:
+        user_id (str) - the user ID used to upload
+        data (list) - the dicts representing the records to upload of a given type
+        query (str) - the sqlite query to insert records into a table
+
+    Throws:
+        db.ProgrammingError - if a record does not have the required keys
+    """
+
+    # Add user_id to each record
     for record in data:
         record["user_id"] = user_id
+
+    # Insert the records
     db = get_db()
     db.executemany(query, data)
 
+
+################################ Legacy Methods ############################
 
 @bp.route("/location", methods=('POST',))
 def location():
